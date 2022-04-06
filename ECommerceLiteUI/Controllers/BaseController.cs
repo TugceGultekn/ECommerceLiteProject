@@ -8,10 +8,24 @@ namespace ECommerceLiteUI.Controllers
 {
     public class BaseController : Controller
     {
-        // GET: Base
-        public ActionResult Index()
+        [NonAction]
+      public string CreateRandomNewPassword()
         {
-            return View();
+            Random rnd = new Random();
+            int number = rnd.Next(1000, 5000);
+            char[] guidstring = Guid.NewGuid().ToString().Replace("-"," ").ToArray();
+            string newPassword = string.Empty;
+            for (int i = 0; i < guidstring.Length; i++)
+            {
+                if (newPassword.Length == 5) break;
+                if (char.IsLetter(guidstring[i]))
+                {
+                    newPassword += guidstring[i];
+                }
+               
+            }
+            newPassword += number;
+            return newPassword;
         }
     }
 }
