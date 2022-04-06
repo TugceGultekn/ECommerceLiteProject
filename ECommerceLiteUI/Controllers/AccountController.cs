@@ -62,17 +62,20 @@ namespace ECommerceLiteUI.Controllers
                     return View(model);
                 }
 
+                // aktivasyon kodu üretelim
+
+                var activationCode = Guid.NewGuid().ToString().Replace("-", "");
                 // artık sisteme kayıt olabilir.
+
                 var newUser = new ApplicationUser()
                 {
                     Name = model.Name,
                     Surname = model.Surname,
                     Email = model.Email,
-                    UserName = model.TCNumber
+                    UserName = model.TCNumber,
+                    ActivationCode=activationCode
                 };
-                // aktivasyon kodu üretelim
-
-                var activationCode = Guid.NewGuid().ToString().Replace("-", "");
+               
                 //artık ekleyelim.
                 var createResult = myUserManager.CreateAsync(newUser, model.Password);
 
@@ -118,8 +121,63 @@ namespace ECommerceLiteUI.Controllers
             }
             catch (Exception ex)
             {
+                // loglama yapılacak.
 
+                ModelState.AddModelError("", "Beklenmedik bir hata oluştu. Tekrar deneyin");
+                return View(model);
                
+            }
+        }
+
+        [HttpGet]
+        public async  Task<ActionResult> Activation(string code)
+        {
+            try
+            {
+                var user =
+                    myUserStore.Context.Set<ApplicationUser>()
+                    .FirstOrDefault(x => x.ActivationCode == code);
+                if (user==null)
+                {
+                    ViewBag.ActivationResult = "Aktivasyon işlemi başarısız. Sistem yöneticisinden yeniden isteyin.";
+                    return View();
+                }
+                //user bulundu.
+                if (user.EmailConfirmed) //zaten aktifleşmiş mi?
+                {
+                    ViewBag.ActivationResult = "Aktivasyon işleminiz zaten gerçekleşmiştir. Giriş yaparak sistemi kullanabilirsiniz.";
+                    return View();
+                }
+                user.EmailConfirmed = true;
+                await myUserStore.UpdateAsync(user);
+                await myUserStore.Context.SaveChangesAsync();
+                //bu kişi artık aktif
+                PassiveUser passiveUser = myPassiveUserRepo.AsQueryable().FirstOrDefault(x => x.UserId == user.Id);
+                if (passiveUser!= null)
+                {
+                    Customer customer = new Customer()
+                    {
+                        UserId=user.Id,
+                        TCNumber= passiveUser.TCNumber,
+                        IsDeleted=false,
+                        LastActiveTime=DateTime.Now
+                    };
+                   await myCustomerRepo.InsertAsync(customer);
+                    //Aspnetuser tablosuna da bu kişinin customer oldugunu bildirmemiz gerek.
+                    myUserManager.RemoveFromRole(user.Id, Roles.Passive.ToString());
+                    myUserManager.AddToRole(user.Id, Roles.Customer.ToString());
+                    //işlem bitti başarılı olduguna dair mesaj gönderelim
+                    ViewBag.ActivationResult = $"Merhaba Sayın {user.Name} {user.Surname},aktifleştirme işleminiz başarılıdır. Giriş yapıp sistemi kullanabilirsiniz.";
+                    return View();
+                }
+                return View();
+            }
+            catch (Exception ex)
+            {
+                //loglama yapılacak.
+                ModelState.AddModelError("", "Beklenmedik hata oluştu");
+                return View();
+                
             }
         }
     }
