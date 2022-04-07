@@ -422,7 +422,7 @@ namespace ECommerceLiteUI.Controllers
                 if (user.Roles.FirstOrDefault().RoleId == myRoleManager.FindByName(Enum.GetName(typeof(Roles), Roles.Passive)).Id)
                 {
                     ViewBag.Result = "Sistemi kullanmak için aktivasyon yapmanız gerekmektedir. Emailinize gödnerilen aktivasyon linkine tıklanıyınız.";
-                    return View();
+                    return View(model);
                 }
                 //artık login olabilir.
 
@@ -431,6 +431,11 @@ namespace ECommerceLiteUI.Controllers
                 authManager.SignIn(new AuthenticationProperties()
                 {IsPersistent = model.RememberMe}, userIdentity
                   );
+                ////2. yol
+                //AuthenticationProperties authProperties = new AuthenticationProperties();
+                //authProperties.IsPersistent = model.RememberMe;
+                //authManager.SignIn(authProperties, userIdentity);
+
                 // Giriş yaptı. peki nereye gidecek. 
                 //Herkes rolüne uygun sayfaya gidecek.
                 if (user.Roles.FirstOrDefault().RoleId== myRoleManager.FindByName(Enum.GetName(typeof(Roles),Roles.Admin)).Id)
