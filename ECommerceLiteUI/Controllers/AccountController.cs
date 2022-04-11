@@ -344,10 +344,10 @@ namespace ECommerceLiteUI.Controllers
             try
             {
                 // Şifresini unutmuş.
-                //1.yöntem
-                //var user = myUserStore.Context.Set<ApplicationUser>().FirstOrDefault(x => x.Email == model.Email);
-                //2.yöntem
-                var user = myUserManager.FindByEmail(model.Email);
+                
+                var user = myUserStore.Context.Set<ApplicationUser>().FirstOrDefault(x => x.Email == model.Email);
+                
+               
                 if (user==null)
                 {
                     ViewBag.RecoverPassword = "Sistemde böyle bir kullanıcı olmadıgı için size yeni bir şifre gönderemiyoruz.Lütfen önce sisteme kayıt olun.";
@@ -376,7 +376,7 @@ namespace ECommerceLiteUI.Controllers
 
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 // ex loglanacak
