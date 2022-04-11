@@ -73,7 +73,7 @@ namespace ECommerceLiteUI.Controllers
                     Name = model.Name,
                     Surname = model.Surname,
                     Email = model.Email,
-                    UserName = model.TCNumber,
+                    UserName = model.Email,
                     ActivationCode=activationCode
                 };
                
@@ -104,7 +104,7 @@ namespace ECommerceLiteUI.Controllers
                      Subject="ECommerceLite Site Aktivasyon Emaili",
                      Message=$"Merhaba {newUser.Name} { newUser.Surname},"+
                      $"<br/> Hesabınızı aktileştirmek için <b>" +
-                     $"<a href='{siteURL}/Account/Activasyon?" +
+                     $"<a href='{siteURL}/Account/Activation?" +
                      $"code={activationCode}'> Aktivasyon Linkine </a></b> tıklayın"
 
                     });
@@ -156,6 +156,10 @@ namespace ECommerceLiteUI.Controllers
                 PassiveUser passiveUser = myPassiveUserRepo.AsQueryable().FirstOrDefault(x => x.UserId == user.Id);
                 if (passiveUser!= null)
                 {
+                    passiveUser.IsDeleted = true;
+                    myPassiveUserRepo.Update(passiveUser);
+                        
+
                     Customer customer = new Customer()
                     {
                         UserId=user.Id,
