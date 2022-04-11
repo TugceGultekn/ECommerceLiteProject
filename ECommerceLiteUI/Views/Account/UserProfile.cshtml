@@ -6,7 +6,7 @@
 }
 
 <div class="row margin-vert-30">
-    <div class="col-6 offset-3">
+    <div class="col-6 offset-3" style="margin-left:25%; margin-right:25%"> 
         @using (Html.BeginForm("UserProfile", "Account", FormMethod.Post,
             new { @class = "form-horizontal" }))
         {
@@ -50,6 +50,7 @@
 
                 </div>
                 <br />
+              
                 <div class="pull-right">
                     <button type="submit" class="btn btn-default" style="background-color:#D10024;color:white">
                         Profilimi Güncelle
@@ -60,15 +61,15 @@
                         a tagini kullanarak şifremi değiştire gitmek isterseniz, aşağıdaki kod yeterli Scripte gerek yok.*@
                     <a href="/Account/UpdatePassword" 
                         class="btn btn-default"
-                       style="background-color:#D10024;color:white; margin-right:5px"
-                        >Şifremi Değiştir</a>
+                       style="background-color:#D10024;color:white; margin-right:5px">
+                        Şifremi Değiştir</a>
 
                     @*Normal buton kullanmak isterseniz click eventine script yazmalısınız.*@
 
                 <input type="button" 
                        value="Şifremi Değiştir"
                        class="btn btn-default"
-                       style="background-color:#D10024;color:white;
+                       style="background-color:#D10024;color:pink;
                        margin-right:5px"
                        onclick="Gotoupdatepasswordpage()"/>
                 </div>
@@ -81,9 +82,10 @@
 </div>
 
 
-@section Script{
+@section Scripts{
     <script>
         function Gotoupdatepasswordpage() {
+            alert("dfgdfgfd");
             window.location.assign{"/Account/UpdatePassword"}
         }
     </script>

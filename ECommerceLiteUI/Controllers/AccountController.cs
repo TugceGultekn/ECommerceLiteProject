@@ -259,7 +259,7 @@ namespace ECommerceLiteUI.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Authorize]
         public ActionResult UpdatePassword()
         {
