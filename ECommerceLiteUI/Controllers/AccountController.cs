@@ -391,6 +391,11 @@ namespace ECommerceLiteUI.Controllers
         {
             try
             {
+                //giriş yapmış biri olarak giriş yapma sayfası gelmesin home ındex gelsin
+                if (MembershipTools.GetUser()!=null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
                 //To Do: Sayfa patlamazsa if kontrolüne gerek yok. test ederken bakılacak.
                 var model = new LoginViewModel()
                 {
