@@ -20,5 +20,5 @@ namespace ECommerceLiteBLL.Repostory
     public class CustomerRepo : RepositoryBase<Customer, int> { }
     public class AdminRepo : RepositoryBase<Admin, int> { }
     public class PassiveUserRepo : RepositoryBase<PassiveUser, int> { }
-    public class ProductPictureRepo : RepositoryBase<ProductPictureRepo, int> { }
+    public class ProductPictureRepo : RepositoryBase<ProductPicture, int> { }
 }
