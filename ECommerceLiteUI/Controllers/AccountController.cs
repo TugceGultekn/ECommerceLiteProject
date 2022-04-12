@@ -34,7 +34,11 @@ namespace ECommerceLiteUI.Controllers
         [HttpGet]
         public ActionResult Register()
         {
-            //Kayıt ol sayfası
+            //giriş yapmış biri olarak giriş yapma sayfası gelmesin home ındex gelsin
+            if (MembershipTools.GetUser() != null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
         [HttpPost]
@@ -199,7 +203,7 @@ namespace ECommerceLiteUI.Controllers
                     Name = user.Name,
                     Surname = user.Surname,
                     Email = user.Email,
-                    TCNumber = user.UserName
+                    //TCNumber = user.UserName
                 };
                 return View(model);
             }
@@ -245,7 +249,7 @@ namespace ECommerceLiteUI.Controllers
                 {
                     Name = user.Name,
                     Surname = user.Surname,
-                    TCNumber = user.UserName,
+                    //TCNumber = user.UserName,
                     Email = user.Email
                 };
                 return View(updateModel);
@@ -262,27 +266,14 @@ namespace ECommerceLiteUI.Controllers
         [HttpGet]
         [Authorize]
         public ActionResult UpdatePassword()
-        {
-            var user = myUserManager.FindById(HttpContext.User.Identity.GetUserId());
-            if (user != null)
-            {
-                ProfileViewModel model = new ProfileViewModel()
-                {
-                    Email = user.Email,
-                    Name = user.Name,
-                    Surname = user.Surname,
-                    TCNumber = user.UserName
-                };
-                return View(model);
-            }
-            ModelState.AddModelError("", "Sisteme giriş yapmanız gerekmektedir");
+        {   
             return View();
         }
 
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UpdatePassword(ProfileViewModel model)
+        public async Task<ActionResult> UpdatePassword(PasswordChangeViewModel model)
         {
             try
             {
