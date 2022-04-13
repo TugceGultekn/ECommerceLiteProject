@@ -54,5 +54,38 @@ namespace ECommerceLiteUI.Models
             }
           
         }
+        public void GetCategory()
+        {
+            if (CategoryId>0)
+            {
+                //orn elektronik categori > akıllı telefon > ürün(ıphone12)
+                Category = myCategoryRepo.GetById(CategoryId);
+                //akıllı telefon kategorisi elimde
+                //akıllı telefon kategorisinin bir üst kategorisi var mı
+                if (Category.BaseCategoryId != null && Category.BaseCategoryId > 0)
+                {
+                    Category.CategoryList = new List<Category>();
+                    Category.BaseCategory = myCategoryRepo.GetById(Category.BaseCategoryId.Value);
+                    Category.CategoryList.Add(Category.BaseCategory);
+                    bool isOver = false;
+                    Category baseCategory = Category.BaseCategory;
+                    while (isOver)
+                    {
+
+                        if (baseCategory.BaseCategoryId>0)
+                        {
+                            Category.CategoryList.Add(myCategoryRepo.GetById(baseCategory.BaseCategoryId.Value));
+                            baseCategory = myCategoryRepo.GetById(baseCategory.BaseCategoryId.Value);
+                        }
+                        else
+                        {
+                            isOver = true;
+                        }
+                    }
+                       Category.CategoryList= Category.CategoryList.OrderBy(x => x.Id).ToList();
+                }
+            }
+        }
+
     }
 }
