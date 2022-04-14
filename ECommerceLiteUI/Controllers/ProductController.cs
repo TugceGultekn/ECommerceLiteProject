@@ -2,6 +2,7 @@
 using ECommerceLiteBLL.Setting;
 using ECommerceLiteEntity.Models;
 using ECommerceLiteUI.Models;
+using Mapster;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -89,17 +90,25 @@ namespace ECommerceLiteUI.Controllers
                 //ürün tabloya kayıt olacak.
                 //to do mapleme yapılacak
 
-                Product product = new Product()
-                {
-                    ProductName = model.ProductName,
-                    Description = model.Description,
-                    ProductCode = model.ProductCode,
-                    CategoryId = model.CategoryId,
-                    Discount = model.Discount,
-                    Quantity = model.Quantity,
-                    RegisterDate = DateTime.Now,
-                    Price = model.Price
-                };
+                //Product product = new Product()
+                //{
+                //    ProductName = model.ProductName,
+                //    Description = model.Description,
+                //    ProductCode = model.ProductCode,
+                //    CategoryId = model.CategoryId,
+                //    Discount = model.Discount,
+                //    Quantity = model.Quantity,
+                //    RegisterDate = DateTime.Now,
+                //    Price = model.Price
+                //};
+                //mapleme yapıldı.
+                //mapster paketi indirildi. Mapster bir objeyi diğer objeye zahmetsizce aktarır. aktarım yapabilmesi için 
+                //a objesi ile b objesinin içindeki propertylerin isimleri ve tipleri birebir aynı olmalıdır.bu projede 
+                //mapster kullandık. Core projesinde daha profesyonel olan automapper ı kullanacağız.
+                //Bir dto objesinin içindeki verileri alır asıl objenin içine aktarır.
+                //asıl objenın verilerini dto objesinin içindeki propertylerine aktarır.
+                Product product = model.Adapt<Product>();
+                //Product product2 = model.Adapt<ProductViewModel, Product>(); //ikinci versiyon
                 int insertResult = myproductRepo.Insert(product);
                 if (insertResult>0)
                 {
