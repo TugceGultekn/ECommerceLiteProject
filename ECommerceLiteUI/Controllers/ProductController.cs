@@ -73,6 +73,19 @@ namespace ECommerceLiteUI.Controllers
                     ModelState.AddModelError("", "Ürüne ait kategori seçilmelidir.");
                     return View(model);
                 }
+                //burada kontrol lazım
+                //acaba girdiği ürün kodu bizim db de zaten var mı?
+                //metotsuz
+                if (myproductRepo.IsSameProductCode(model.ProductCode))
+                {
+                    ModelState.AddModelError("", "Dikkat! Girdiğiniz ürün kodu sistemdeki bir başka ürüne aittir. Ürün kodları aynı olamaz");
+                    return View(model);
+                }
+
+
+
+
+
                 //ürün tabloya kayıt olacak.
                 //to do mapleme yapılacak
 
@@ -105,9 +118,9 @@ namespace ECommerceLiteUI.Controllers
                             {
                                 string filename = SiteSettings.StringCharacterConverter(model.ProductName).ToLower().Replace("-", "");
                                 string exstensionName = Path.GetExtension(item.FileName);
-                                string directoryPath = Server.MapPath($"~/ProductPictures/{filename} /{model.ProductCode}");
+                                string directoryPath = Server.MapPath($"~/ProductPictures/{filename}/{model.ProductCode}");
                                 string guid = Guid.NewGuid().ToString().Replace("-", "");
-                                string filePath = Server.MapPath($"~/ProductPictures/{filename} /{model.ProductCode}/") 
+                                string filePath = Server.MapPath($"~/ProductPictures/{filename}/{model.ProductCode}/") 
                                     +"-"+ filename +"-"+ counter +"-"+ guid + exstensionName;
                                 if (!Directory.Exists(directoryPath))
                                 {

@@ -24,6 +24,7 @@
     <div class="form-group">
         @Html.Label("Ürün Açıklaması")
         @Html.TextBoxFor(x => x.Description, new { @class = "form-control" })
+       
     </div>
     <div class="form-group">
         @Html.Label("Kategorisi")
@@ -32,8 +33,14 @@
        , new { @class = "form-control" })
     </div>
     <div class="form-group">
-        @Html.Label("Ürün Kodu")
-        @Html.TextBoxFor(x => x.ProductCode, new { @class = "form-control", minLenght = "8", maxLenght = "8" })
+        @Html.Label("Ürün Kodu:")
+        @Html.TextBoxFor(x => x.ProductCode, new
+        {
+            @class = "form-control",
+     minLength = "8",
+            maxLength = "8"
+        })
+
     </div>
     <div class="form-group">
         @Html.Label("Ürün Fiyatı")
