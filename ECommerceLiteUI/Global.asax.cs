@@ -1,6 +1,8 @@
 ﻿using ECommerceLiteBLL.Account;
+using ECommerceLiteBLL.Repostory;
 using ECommerceLiteEntity.Enums;
 using ECommerceLiteEntity.IdentityModels;
+using ECommerceLiteEntity.Models;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -20,6 +22,8 @@ namespace ECommerceLiteUI
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            #region CreateRoles_Rollerioluştur
             //NOT: Application_Start :
             //Uygulama ilk kez çalıştırıldığında bir defaya mahsus olmak üzere çalışır.
             //Bu nedenle ben uyg. ilk kez çalıştığında DB'de Roller ekli mi diye bakmak istiyorum.
@@ -35,14 +39,14 @@ namespace ECommerceLiteUI
             foreach (var item in allRoles)
             {
                 //adım 4: Acaba bu rol DB'de ekli mi? 
-                if (!myRoleManager.RoleExists(item)) // Eğer bu role ekli değilse? myRoleManager.RoleExists(item)==false
+                if (!myRoleManager.RoleExists(item)) // Eğer bu role ekli değilse?
                 {
                     //Adım 5: Rolü ekle!
                     //1.yol
                     ApplicationRole role = new ApplicationRole()
                     {
                         Name = item,
-                        IsDeleted=false
+                        IsDeleted = false
                     };
                     myRoleManager.Create(role);
                     //2.yol
@@ -53,7 +57,49 @@ namespace ECommerceLiteUI
 
                 }
             }
+
+
+            #endregion
+
+            #region CreateDefaultAdmin_SistemAdminiOluştur
+
+            //NOT: Proje ilk ayağa kalkığında arka planda default admin kullanıcısı ekeleylim
+            //NOT: Kendi isminizle admin olarak kayıt olmanız için Admin register sayfası zaman kısıtlılığından yapamadık. Geniş bir zamanda eklenebilir.
+            var myUserManager = MembershipTools.NewuserManager();
+            var allUsers = myUserManager.Users;
+           
+            AdminRepo myAdminRepo = new AdminRepo();
+            if (myAdminRepo.GetAll().Count==0) // hiç admin yoksa ekleyelim.
+            {
+                ApplicationUser adminUser = new ApplicationUser()
+                {
+                    Name = "303",
+                    Surname = "Admin",
+                    RegisterDate = DateTime.Now,
+                    Email = "nayazilim303@gmail.com",
+                    UserName = "nayazilim303@gmail.com",
+                    IsDeleted = false,
+                    EmailConfirmed = true
+                };
+                var creatResult = myUserManager.Create(adminUser, "admin12345");
+                if (creatResult.Succeeded)
+                {
+                    myUserManager.AddToRole(adminUser.Id, Roles.Admin.ToString());
+                    Admin admin = new Admin()
+                    {
+                        UserId = adminUser.Id,
+                        TCNumber = "00000000000",
+                        IsDeleted = false,
+                        LastActiveTime = DateTime.Now
+                    };
+                    myAdminRepo.Insert(admin);
+                }
+            }
+            #endregion  
+
+
         }
+
         protected void Application_Error()
         {
             //NOT: ihtiyacım olursa internetten Global.asax'ın metotlarına bakıp kullanabilirim
@@ -62,6 +108,6 @@ namespace ECommerceLiteUI
             Exception ex = Server.GetLastError();
             //ex loglanacak
         }
-      
+
     }
 }

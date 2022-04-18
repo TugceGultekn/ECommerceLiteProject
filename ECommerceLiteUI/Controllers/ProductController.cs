@@ -13,6 +13,7 @@ using System.Web.Mvc;
 
 namespace ECommerceLiteUI.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
         CategoryRepo mycategoryRepo = new CategoryRepo();
