@@ -31,6 +31,7 @@ namespace ECommerceLiteEntity.IdentityModels
         [DataType(DataType.DateTime)]
         public DateTime RegisterDate { get; set; } = DateTime.Now;
         public string ActivationCode { get; set; }
+        public bool IsDeleted { get; set; } = false;
 
         public virtual List<Admin> AdminList { get; set; }
         public virtual List<Customer> CustomerList { get; set; }

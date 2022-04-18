@@ -12,5 +12,6 @@ namespace ECommerceLiteEntity.Models
     {
         
          DateTime RegisterDate { get; set; }
+         bool IsDeleted { get; set; } 
     }
 }

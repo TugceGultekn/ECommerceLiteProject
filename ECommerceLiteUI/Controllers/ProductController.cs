@@ -172,66 +172,60 @@ namespace ECommerceLiteUI.Controllers
                     //Acaba bu producta resim seçmiş mi ? Resim seçtiyse o resimlerin yollarını kayıt et.
                     if (model.Files.Any() && model.Files[0] != null)
                     {
-                        ProductPicture productPicture = new ProductPicture();
-                        productPicture.ProductId = product.Id;
-                        productPicture.RegisterDate = DateTime.Now;
-                        int counter = 1; // bizim sistemde resim adedi 5 olarak belirlendği için
+                        int pictureinsertResult = 0;
                         foreach (var item in model.Files)
                         {
-                            if (counter == 5) break;
-                            if (item != null && item.ContentType.Contains("image") && item.ContentLength>0)
+                            if (item != null && item.ContentType.Contains("Image") && item.ContentLength>0)
                             {
-                                string filename = SiteSettings.StringCharacterConverter(model.ProductName).ToLower().Replace("-", "");
-                                string exstensionName = Path.GetExtension(item.FileName);
-                                string directoryPath = Server.MapPath($"~/ProductPictures/{filename}/{model.ProductCode}");
+                                string productName = SiteSettings.StringCharacterConverter(model.ProductName).ToLower().Replace("-", "");
+                                string extensionName = Path.GetExtension(item.FileName);
+                                //klasor adresi: ProductPicturs/iphone13/202020
+                                string directoryPath = Server.MapPath($"~/ProductPictures/{productName}/{model.ProductCode}");
                                 string guid = Guid.NewGuid().ToString().Replace("-", "");
-                                string filePath = Server.MapPath($"~/ProductPictures/{filename}/{model.ProductCode}/") 
-                                    +"-"+ filename +"-"+ counter +"-"+ guid + exstensionName;
+                                //productpicturs/iphone13/202020/iphone13-guid.jpg
+                                string filePath = Server.MapPath($"~/ProductPictures/{productName}/{model.ProductCode}" +
+                                    $"{productName}-{guid}{extensionName}");
                                 if (!Directory.Exists(directoryPath))
                                 {
                                     Directory.CreateDirectory(directoryPath);
                                 }
+                                //resmi o klasore kayıt edelim
                                 item.SaveAs(filePath);
-                                //todo: Fazla if kullanıldı başka türlüde olabilirdi düşünülmedi.
-                                if (counter==1)
+                                //işlem bitti db ye kayıt olacak
+                                ProductPicture picture = new ProductPicture()
                                 {
-                                    productPicture.ProductPicture1=$"/ProductPictures/{filename}/{model.ProductCode}/" 
-                                          + filename + "-" + counter + "-" + guid + exstensionName;
+                                    ProductId = product.Id,
+                                    RegisterDate = DateTime.Now,
+                                    Picture = $"ProductPictures/{productName}/{model.ProductCode}/" +
+                                    $"{productName}-{guid}{extensionName}",
 
-                                }
-                                if (counter == 2)
-                                {
-                                    productPicture.ProductPicture2 = $"/ProductPictures/{filename}/{model.ProductCode}/" 
-                                          + filename + "-" + counter + "-" + guid + exstensionName;
-
-                                }
-                                if (counter == 3)
-                                {
-                                    productPicture.ProductPicture3 = $"/ProductPictures/{filename}/{model.ProductCode}/" 
-                                         + filename + "-" + counter + "-" + guid + exstensionName;
-
-                                }
+                                };
+                                 pictureinsertResult = myproductPictureRepo.Insert(picture);
                             }
-                            counter++;
                         }
-                        //to do: yukarıyı fora dönüştürebilir miyiz?
-                        //for (int i = 0; i < model.Files.Count; i++)
-                        //{
-
-                        //}
-                        int productPictureInsertResult = myproductPictureRepo.Insert(productPicture);
-                        if (productPictureInsertResult>0)
+                        // pictureinsertResult kontrol edilecektir.
+                        if (insertResult>0 && model.Files.Count== insertResult)
                         {
+                            // bütün resimler eklenmiş.
+                            TempData["ProductInsertSuccess"] = "Yeni ürün eklenmiştir.";
+                           return RedirectToAction("ProductList", "Product");
+                        }
+                        else if(insertResult>0 && model.Files.Count!= insertResult)
+                        {
+                            // eksik eklemiş
+                            TempData["ProductInsertWarning"] = "Yeni ürün eklendi ama resimlerden bazıları eklenemedi.";
                             return RedirectToAction("ProductList", "Product");
                         }
                         else
                         {
-                            ModelState.AddModelError("", "Ürün eklendi ama ürüne ait fotoğraflar eklenirlen beklenmedik bir hata oluştu.");
-                            return View(model);
+                            //ürünü ekledi ama resimi eklememiş.
+                            TempData["ProductInsertWarning"] = "Yeni ürün eklendi ama resimler eklenemedi.";
+                            return RedirectToAction("ProductList", "Product");
                         }
                     }
                     else
                     {
+                        TempData["ProductInsertSuccess"] = "Yeni ürün eklenmiştir";
                         return RedirectToAction("ProductList", "Product");
                             
                     }
