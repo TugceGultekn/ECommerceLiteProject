@@ -41,7 +41,8 @@ namespace ECommerceLiteUI
                     //1.yol
                     ApplicationRole role = new ApplicationRole()
                     {
-                        Name = item
+                        Name = item,
+                        IsDeleted=false
                     };
                     myRoleManager.Create(role);
                     //2.yol
