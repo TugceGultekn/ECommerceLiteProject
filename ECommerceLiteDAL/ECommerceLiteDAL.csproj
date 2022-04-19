@@ -86,6 +86,10 @@
     <Compile Include="Migrations\202204180740592_mig_ProductPictureTableUpdate.designer.cs">
       <DependentUpon>202204180740592_mig_ProductPictureTableUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202204191134120_mig_quantitytur.cs" />
+    <Compile Include="Migrations\202204191134120_mig_quantitytur.designer.cs">
+      <DependentUpon>202204191134120_mig_quantitytur.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MyContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -106,6 +110,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202204180740592_mig_ProductPictureTableUpdate.resx">
       <DependentUpon>202204180740592_mig_ProductPictureTableUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204191134120_mig_quantitytur.resx">
+      <DependentUpon>202204191134120_mig_quantitytur.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

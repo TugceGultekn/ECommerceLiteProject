@@ -33,8 +33,8 @@ namespace ECommerceLiteUI.Models
         public string ProductCode { get; set; }
         [Required]
         [DataType(DataType.Currency)]
-        public string Price { get; set; }
-        public string Quantity { get; set; }
+        public decimal Price { get; set; }
+        public int Quantity { get; set; }
         public double Discount { get; set; }
 
         // her ürünün bir kategorisi olur. ilişki kurduk

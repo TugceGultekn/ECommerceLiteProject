@@ -3,15 +3,51 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using ECommerceLiteBLL.Repostory;
+using ECommerceLiteUI.Models;
 
 namespace ECommerceLiteUI.Controllers
 {
     public class HomeController : Controller
     {
+
+        CategoryRepo myCategoryRepo = new CategoryRepo();
+        ProductRepo myProductRepo = new ProductRepo();
         public ActionResult Index()
         {
-            return View();
+            //Ana kategorilerden dördünü viewbag ile sayfaya gönderelim.
+            var categoryList = myCategoryRepo.AsQueryable().Where(x => x.BaseCategoryId == null).Take(4).ToList();
+
+            ViewBag.CategoryList = categoryList.OrderByDescending(x => x.Id);
+
+            //ürünler
+
+            var productList = myProductRepo.AsQueryable().Where(x => x.IsDeleted == false && x.Quantity >= 1).Take(10).ToList();
+            List<ProductViewModel> model = new List<ProductViewModel>();
+
+            
+            foreach (var item in productList)
+            {
+                var product = new ProductViewModel()
+                {
+                    Id = item.Id,
+                    CategoryId = item.CategoryId,
+                    ProductName = item.ProductName,
+                    Description = item.Description,
+                    Quantity = item.Quantity,
+                    Discount = item.Discount,
+                    RegisterDate = item.RegisterDate,
+                    Price = item.Price,
+                    ProductCode = item.ProductCode
+                };
+                product.GetCategory();
+                product.GetProductPictures();
+                model.Add(product);
+            }
+
+            return View(model);
         }
+
 
         public ActionResult About()
         {
