@@ -39,53 +39,57 @@ namespace ECommerceLiteUI.Models
 
         // her ürünün bir kategorisi olur. ilişki kurduk
         public int CategoryId { get; set; }
-        
-        public Category Category { get; set; }
-        public List<ProductPicture> ProductPictureList { get; set; }
+
+        public Category CategoryOfProduct { get; set; }
+        public List<ProductPicture> PicturesOfProduct { get; set; }
         //ürün eklenirken ürüne ait resimler seçilebilir. Seçilen resimleri hafızada tutacak proporty
-        public List<HttpPostedFileBase> Files { get; set; } =new List<HttpPostedFileBase>();
+        public List<HttpPostedFileBase> Files { get; set; } = new List<HttpPostedFileBase>();
 
         public void GetProductPictures()
         {
             if (Id > 0)
             {
-                ProductPictureList = myProductPictureRepo.AsQueryable().Where(x => x.ProductId == Id).ToList();
+                PicturesOfProduct = myProductPictureRepo.AsQueryable().Where(x => x.ProductId == Id).ToList();
 
             }
-          
+
         }
         public void GetCategory()
         {
-            if (CategoryId>0)
+            if (CategoryId > 0)
             {
-                //orn elektronik categori > akıllı telefon > ürün(ıphone12)
-                Category = myCategoryRepo.GetById(CategoryId);
-                //akıllı telefon kategorisi elimde
-                //akıllı telefon kategorisinin bir üst kategorisi var mı
-                if (Category.BaseCategoryId != null && Category.BaseCategoryId > 0)
+                //ÖRN: Elektronik kat.--> Akıllı Telefon kat. --> ürün(iphone 13 pro max)
+                CategoryOfProduct = myCategoryRepo.GetById(CategoryId);
+                CategoryOfProduct.CategoryList = new List<Category>();
+                // Akıllı telefon kat artık elimde!
+                // Akıllı telefon kat. bir üst kategorisi var mı?
+                // ÖRN: Elek--> Akkıl tel --> applegiller
+                if (CategoryOfProduct.BaseCategoryId != null
+                    && CategoryOfProduct.BaseCategoryId > 0)
                 {
-                    Category.CategoryList = new List<Category>();
-                    Category.BaseCategory = myCategoryRepo.GetById(Category.BaseCategoryId.Value);
-                    Category.CategoryList.Add(Category.BaseCategory);
-                    bool isOver = false;
-                    Category baseCategory = Category.BaseCategory;
-                    while (isOver)
-                    {
+                    CategoryOfProduct.BaseCategory = myCategoryRepo.GetById
+                        (CategoryOfProduct.BaseCategoryId.Value);
+                    CategoryOfProduct.CategoryList.Add(CategoryOfProduct.BaseCategory);
 
-                        if (baseCategory.BaseCategoryId>0)
+                    bool isOver = false;
+                    Category currentBaseCategory = CategoryOfProduct.BaseCategory;
+                    while (!isOver)
+                    {
+                        if (currentBaseCategory.BaseCategoryId != null
+                            && currentBaseCategory.BaseCategoryId > 0)
                         {
-                            Category.CategoryList.Add(myCategoryRepo.GetById(baseCategory.BaseCategoryId.Value));
-                            baseCategory = myCategoryRepo.GetById(baseCategory.BaseCategoryId.Value);
+                            // mevcuttaki ana kategorinin üst kategorisi varmış
+                            // onu alalım
+                            currentBaseCategory = myCategoryRepo.GetById(currentBaseCategory.BaseCategoryId.Value);
+                            CategoryOfProduct.CategoryList.Add(currentBaseCategory);
                         }
                         else
                         {
                             isOver = true;
                         }
                     }
-                       Category.CategoryList= Category.CategoryList.OrderBy(x => x.Id).ToList();
                 }
             }
         }
-
     }
 }
