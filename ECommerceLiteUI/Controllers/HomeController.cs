@@ -72,7 +72,7 @@ namespace ECommerceLiteUI.Controllers
         }
 
 
-        public ActionResult AddToCart(int id)
+        public ActionResult AddToCard(int id)
         {
             try
             {

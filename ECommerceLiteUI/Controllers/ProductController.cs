@@ -184,7 +184,7 @@ namespace ECommerceLiteUI.Controllers
                                 string directoryPath = Server.MapPath($"~/ProductPictures/{productName}/{model.ProductCode}");
                                 string guid = Guid.NewGuid().ToString().Replace("-", "");
                                 //productpicturs/iphone13/202020/iphone13-guid.jpg
-                                string filePath = Server.MapPath($"~/ProductPictures/{productName}/{model.ProductCode}" +
+                                string filePath = Server.MapPath($"~/ProductPictures/{productName}/{model.ProductCode}/" +
                                     $"{productName}-{guid}{extensionName}");
                                 if (!Directory.Exists(directoryPath))
                                 {
@@ -197,7 +197,7 @@ namespace ECommerceLiteUI.Controllers
                                 {
                                     ProductId = product.Id,
                                     RegisterDate = DateTime.Now,
-                                    Picture = $"ProductPictures/{productName}/{model.ProductCode}/" +
+                                    Picture = $"/ProductPictures/{productName}/{model.ProductCode}/" +
                                     $"{productName}-{guid}{extensionName}",
 
                                 };
