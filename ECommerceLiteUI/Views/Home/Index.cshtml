@@ -10,26 +10,26 @@
 @*<h4>Buraya Tempdata ile sepet gelecektir.</h4>*@
 @if (TempData["BuySuccess"] != null)
 {
-    <div class="callout callout-danger">
+    <div class="alert alert-success">
         @TempData["BuySuccess"]
     </div>
 }
 
 @if (TempData["BuyFailed"] != null)
 {
-    <div class="callout callout-danger">
+    <div class="alert alert-danger">
         @TempData["BuyFailed"]
     </div>
 }
 @if (TempData["AddToCartSuccess"] != null)
 {
-    <div class="callout callout-danger">
+    <div class="alert alert-success">
         @TempData["AddToCartSuccess"]
     </div>
 }
 @if (TempData["AddToCartFailed"] != null)
 {
-    <div class="callout callout-danger">
+    <div class="alert alert-danger">
         @TempData["AddToCartFailed"]
     </div>
 }
