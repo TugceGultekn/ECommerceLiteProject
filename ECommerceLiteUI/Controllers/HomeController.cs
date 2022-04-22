@@ -13,6 +13,7 @@ using QRCoder;
 using System.Drawing;
 using ECommerceLiteEntity.ViewModels;
 using ECommerceLiteBLL.Setting;
+using ECommerceLiteUI.LogManaging;
 
 namespace ECommerceLiteUI.Controllers
 {
@@ -130,7 +131,7 @@ namespace ECommerceLiteUI.Controllers
                         productAddToCart.Quantity = 1;
                         shoppingCart.Add(productAddToCart);
                     }
-                    //Önemli--> Session'a bu lşsteyi atamak lazım.
+                    //Önemli--> Session'a bu listeyi atamak lazım.
                     Session["ShoppingCart"] = shoppingCart;
 
                     TempData["AddToCartSuccess"] = "Ürün sepete eklendi";
@@ -267,6 +268,7 @@ Request.Url.Scheme + Uri.SchemeDelimiter
                         TempData["BuySuccess"] = "Sipariş oluştu, Sipariş numarası:" + customerOrder.OrderNumber;
                         //temizlik
                         Session["ShoppingCart"] = null;
+                        Logger.LogMessage($"Müşterimiz {user.Name} {user.Surname} {orderDetailList.Sum(x => x.TotalPrice)} liralık alışveriş yaptı.", "Home/Buy");
                         return RedirectToAction("Index", "Home");
                     }
                     else
@@ -304,6 +306,7 @@ Request.Url.Scheme + Uri.SchemeDelimiter
             catch (Exception ex)
             {
                 //ex loglanacak.
+                Logger.LogMessage($"SAtın alma işlenminde hata:" + ex.ToString(), "Home/Buy", MembershipTools.GetUser().Id);
                 TempData["BuyFailed"] = "Beklenmedik hata sebebiyle sipariş oluşturulamadı.";
                 return RedirectToAction("Index", "Home");
             }
