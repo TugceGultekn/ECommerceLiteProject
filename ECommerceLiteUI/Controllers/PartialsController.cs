@@ -35,6 +35,10 @@ namespace ECommerceLiteUI.Controllers
             }
             else
             {
+                foreach (var item in shoppingcart)
+                {
+                    item.GetProductPictures();
+                }
                 return PartialView("_PartialShoppingCart", shoppingcart);
             }
         }
