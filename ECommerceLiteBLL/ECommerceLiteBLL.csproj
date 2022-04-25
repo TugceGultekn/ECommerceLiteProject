@@ -100,6 +100,10 @@
       <Project>{b55ed743-2582-42f6-bee7-621e56800c7b}</Project>
       <Name>ECommerceLiteEntity</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ECommerceLiteUtilities\ECommerceLiteUtilities.csproj">
+      <Project>{3df172ee-29c3-43f9-9380-19c1651857e5}</Project>
+      <Name>ECommerceLiteUtilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
