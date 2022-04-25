@@ -39,6 +39,22 @@ namespace ECommerceLiteUI.Models
 
         // her ürünün bir kategorisi olur. ilişki kurduk
         public int CategoryId { get; set; }
+        private decimal _SalePrice;
+        public decimal SalePrice // read only
+        {
+            get
+            {
+                //matematik: ürünün fiyatı - ürün fiyatı*indirim/100
+                decimal _salePrice= Price -
+                    (
+                    Price * ((decimal) Discount/100)
+                    );
+                return _salePrice;
+            }
+        }
+
+       
+           
 
         public Category CategoryOfProduct { get; set; }
         public List<ProductPicture> PicturesOfProduct { get; set; }
