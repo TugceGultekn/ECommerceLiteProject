@@ -311,5 +311,34 @@ Request.Url.Scheme + Uri.SchemeDelimiter
                 return RedirectToAction("Index", "Home");
             }
         }
+
+        public ActionResult ProductDetail(int? id)
+        {
+            try
+            {
+                if (id==null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                if (id>0)
+                {
+                    //ürünü bulacağız.
+                    ProductViewModel model = myProductRepo.GetById(id.Value).Adapt<ProductViewModel>();
+                    model.GetCategory();
+                    model.GetProductPictures();
+                    return View(model);
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Ürün bulunamadı.");
+                    return View(new ProductViewModel());
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Beklenmeyen bir hata oluştu.");
+                return View(new ProductViewModel());
+            }
+        }
     }
 }
